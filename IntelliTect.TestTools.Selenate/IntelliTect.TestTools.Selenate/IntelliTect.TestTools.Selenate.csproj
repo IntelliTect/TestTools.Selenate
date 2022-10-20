@@ -2,10 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>9.0</LangVersion>
-    <Nullable>enable</Nullable>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
+	<OutputType>Library</OutputType>
+    <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Company>IntelliTect-Nuget</Company>
+    <Description>A testing library for selenate to help with test automation.</Description>
+	<Copyright>Copyright © IntelliTect 2019 - $([System.DateTime]::Now.ToString(`yyyy`))</Copyright>
+	<PackageTags>IntelliTect, TestTools, Selenate</PackageTags>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <NeutralLanguage>en</NeutralLanguage>
+	<RepositoryType>git</RepositoryType>
+	<Deterministic>true</Deterministic>
     <NoWarn>CA1303</NoWarn>
   </PropertyGroup>
 
