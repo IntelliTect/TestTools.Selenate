@@ -34,14 +34,7 @@ jobs:
         chrome-version: latest
       id: setup-chrome
     - uses: nanasess/setup-chromedriver@v1
-    - name: Install chrome driver on mac/ubuntu
-      if: ${{ matrix.os }} != 'windows-latest
-      run: |
-        export DISPLAY=:99
-        chromedriver --url-base=/wd/hub &
-        sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
-    - name: Install chrome driver on windows
-      if: ${{ matrix.os }} == 'windows-latest
+    - name: Install chrome driver
       run: chromedriver --url-base=/wd/hub &
     - run: |
         echo Installed chromium version: ${{ steps.setup-chrome.outputs.chrome-version }}
