@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\IntelliTect.TestTools.Selenate\IntelliTect.TestTools.Selenate\IntelliTect.TestTools.Selenate.csproj" />
+    <ProjectReference Include="..\..\IntelliTect.TestTools.Selenate\IntelliTect.TestTools.Selenate.csproj" />
   </ItemGroup>
 
 </Project>
