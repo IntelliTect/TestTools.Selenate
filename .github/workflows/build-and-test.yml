@@ -31,7 +31,7 @@ jobs:
       run: dotnet build -p:ContinuousIntegrationBuild=True --no-restore --configuration Release
     - uses: browser-actions/setup-chrome@v1
       with:
-        chrome-version: stable
+        chrome-version: latest
       id: setup-chrome
     - run: |
         echo Installed chromium version: ${{ steps.setup-chrome.outputs.chrome-version }}
