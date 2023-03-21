@@ -34,9 +34,6 @@ jobs:
         chrome-version: latest
       id: setup-chrome
     - uses: nanasess/setup-chromedriver@v1
-      with:
-        # Optional: do not specify to match Chrome's version
-        chromedriver-version: '111.0.5563.6400'
     - name: Install chrome driver on mac/ubuntu
       if: ${{ matrix.os }} != 'windows-latest
       run: |
