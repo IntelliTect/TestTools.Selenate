@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-defaults:
-  run:
-    shell: pwsh
-
 jobs:
   build-and-test:
     name: build-and-test on ${{matrix.os}}
@@ -25,22 +21,34 @@ jobs:
       with:
         dotnet-version: | 
             6.x
+
     - name: Restore dependencies
       run: dotnet restore
+      shell: pwsh
     - name: Build
       run: dotnet build -p:ContinuousIntegrationBuild=True --no-restore --configuration Release
+      shell: pwsh
+
     - uses: browser-actions/setup-chrome@v1
       with:
         chrome-version: latest
       id: setup-chrome
     - uses: nanasess/setup-chromedriver@v1
-    - name: Install chrome driver
+    - name: Install chrome driver on mac/ubuntu
+      if: ${{ matrix.os }} != 'windows-latest
+      run: |
+        export DISPLAY=:99
+        chromedriver --url-base=/wd/hub &
+        sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
+    - name: Install chrome driver on windows
+      if: ${{ matrix.os }} == 'windows-latest
       run: chromedriver --url-base=/wd/hub &
     - run: |
         echo Installed chromium version: ${{ steps.setup-chrome.outputs.chrome-version }}
   
     - name: Test
       run: dotnet test --no-build --configuration Release --verbosity normal
+      shell: pwsh
 
   automerge:
     needs: [build-and-test]
