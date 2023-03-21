@@ -35,7 +35,6 @@ jobs:
       id: setup-chrome
     - run: |
         echo Installed chromium version: ${{ steps.setup-chrome.outputs.chrome-version }}
-        chrome --version
     - name: Test
       run: dotnet test --no-build --configuration Release --verbosity normal
 
