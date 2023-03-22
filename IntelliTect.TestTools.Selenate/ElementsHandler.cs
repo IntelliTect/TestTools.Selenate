@@ -1,8 +1,5 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace IntelliTect.TestTools.Selenate
 {
@@ -104,6 +101,48 @@ namespace IntelliTect.TestTools.Selenate
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Returns an IEnumerable of ElementHandlers for as long as a matching DOM item is found, based of XPath or CSS index.
+        /// Note that this does not guarantee long-term element existence.
+        /// </summary>
+        /// <returns>The enumerable of ElementHandlers that exist at the time of invocation.</returns>
+        public IEnumerable<ElementHandler> GetElementHandlers()
+        {
+            // DOM elements are 1-based indexes
+            int iteration = 1;
+            
+            do
+            {
+                By by;
+                if (Locator.Mechanism is "css selector")
+                {
+                    by = By.CssSelector($"{Locator.Criteria.Replace("\\", "")}:nth-of-type({iteration})");
+                }
+                else if (Locator.Mechanism is "xpath")
+                {
+                    by = By.XPath($"{Locator.Criteria}[{iteration}]");
+                }
+                else
+                {
+                    throw new ArgumentException(
+                        $"Invalid selector type, {Locator.Mechanism} for method {nameof(GetElementHandlers)}. Please convert to any selector type other than Partial Link Text, Link Text, or Tag Name.");
+                }
+
+                ElementHandler foundHandler = new(WrappedDriver, by);
+                foundHandler.SetSearchContext(SearchContext);
+                if (foundHandler.SetTimeout(Timeout).WaitForDisplayed())
+                {
+                    iteration++;
+                    yield return foundHandler;
+                }
+                else
+                {
+                    yield break;
+                }
+            }
+            while (true);
         }
 
         /// <summary>

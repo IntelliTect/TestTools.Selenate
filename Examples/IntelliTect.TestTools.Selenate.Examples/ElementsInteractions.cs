@@ -30,4 +30,15 @@ public class ElementsInteractions : TestBase
             7,
             foundCount);
     }
+
+    [Fact]
+    public void GetAnEnumerableOfElementHandlers()
+    {
+        DriverHandler.NavigateToPage("https://the-internet.herokuapp.com/challenging_dom");
+        IEnumerable<ElementHandler> foundHandlers = _ChallengingDomPage.Headers.GetElementHandlers().ToList();
+        foreach (ElementHandler handler in foundHandlers)
+        {
+            Assert.True(handler.WaitForDisplayed());
+        }
+    }
 }
