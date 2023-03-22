@@ -1,23 +1,106 @@
-
-AspNetCore
+Selenate
 ==========
+Provides wrapper functions to leverage commonly used WebDriverWaits. Note that this does not provide exhaustive functionality, and customer WebDriverWaits will still be needed for complex or unique scenarios.
 
-Provides test helper classes for instantiating ASP.NET Core classes like RoleManager and UserManager.
-
-Windows UI Test Wrapper
-===========
-
-Provides wrappers for calling Microsoft's UiTestControl classes for WPF and WinForm applications in a more concise, reliable manner
-
-Usage
+Simple Usage
 -----
-To use, inherit a class from the solution's DesktopControls class and make application-specific calls in the inherited class using generic types:
+To instantiate a class that manages simple WebDriver interactions:
 ```
-FindWpfControlByAutomationId( "textBoxControl1", c => new WpfEdit( c ) );
+// WebDriverFactory is not required. You can pass in your own IWebDriver to DriverHandler instead.
+IWebDriver driver = new WebDriverFactory(BrowserType.Chrome).GetDriver();
+DriverHandler handler = new(driver);
+handler.NavigateToPage("http://www.some-page.com/");
 ```
 
-Inherit a class from BaseTestInherit and set the ApplicationLocation and create a new field for the above inherited class.
+To instantiate a class that manages simple interactions with a single IWebElement (note: this uses a Page Object Model approach):
+```
+public class SomePageUnderTest
+{
+    public SomePageUnderTest(IWebDriver driver)
+    {
+        _Driver = driver;
+    }
 
-Inherit test classes from the BaseTestInherit inherited class, and call methods via the new field.
+    // Note that this will not save any settings (e.g. StartButton.SetTimeoutSeconds(30)) made after object instantiation.
+    // Use an explicit getter with a private backing field for that.
+    public ElementHandler SomeButton => new (_Driver, By.CssSelector("div[id='someId']"));
 
-Example projects at https://github.com/IntelliTect/TestTools
+    private IWebDriver _Driver;
+}
+
+public class SomeTest
+{
+    public SomeTest()
+    {
+        IWebDriver driver = new WebDriverFactory(BrowserType.Chrome).GetDriver();
+        _Handler = new(driver);
+    }
+
+    private DriverHandler _Handler;
+
+    // Also works with other runners like MSTest and NUnit
+    [Fact]
+    public void Testing()
+    {
+        // Arrange
+        handler.NavigateToPage("http://www.intellitect.com/");
+        SomePageUnderTest put = new(_Handler.WrappedDriver);
+        _Handler.NavigateToPage("http://www.some-page.com/");
+
+        // Act
+        // Below automatically waits for the element to exist and be clickable before executing.
+        put.SomeButton.Click();
+
+        // Assert (pretend the button disappears after clicking it.)
+        // Default timeout is 15s. Override for this call.
+        Assert.True(put.SomeButton.SetTimeoutSeconds(5).WaitForNotDisplayed(),
+            "The button did not disappear within 5s after clicking it.");
+    }
+}
+
+```
+
+Complex Use Cases
+-----
+Using the same structure as above, we can create complex use cases
+
+public void SomeTest
+{
+    // Same setup as above.
+
+    // Also works with other runners like MSTest and NUnit
+    [Fact]
+    public void SomeOtherTest()
+    {
+        // Arrange
+        // Note: to reduce code duplication, this can be abstracted out into the Page Object for small projects,
+        // Or into an explicit class of grouped actions for large projects.
+        handler.NavigateToPage("http://www.intellitect.com/");
+        SomePageUnderTest put = new(_Handler.WrappedDriver);
+        _Handler.NavigateToPage("http://www.some-page.com/");
+
+        // Act and Assert
+        // Sometimes the site is slow to load, and the initial click doesn't do anything.
+        // For whatever reason, dev team won't fix.
+
+        WebDriverWait wait = new(_Handler.WrappedDriver, TimeSpan.FromSeconds(30));
+        wait.IgnoreExceptionTypes(
+            typeof(NoSuchElementException),
+            typeof(InvalidElementStateException),
+            typeof(ElementNotVisibleException),
+            typeof(StaleElementReferenceException),
+            typeof(ElementClickInterceptedException));
+        
+        // If the button continues to be displayed once the 30s timeout is reached,
+        // This will throw a WebDriverTimeout exception.
+        // Note: if you want a friendly assert message,
+        //   you can wrap just this block of code in a try/catch(WebDriverException) and selectively assign a variable true or false / assert on the result.
+        // Best practice in that scenario is to abstract out to a harness page object or group action object as soon as a second instance of this pattern is used.
+        wait.Until(x => x
+        {
+            IWebElement someButton = x.FindElement(put.SomeButton.Locator);
+            someButton.Click();
+            return !someButton.Displayed;
+        })
+    }
+}
