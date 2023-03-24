@@ -106,6 +106,7 @@ namespace IntelliTect.TestTools.Selenate
         /// <summary>
         /// Returns an ElementHandler as long as a matching DOM item is found, based on XPath or CSS index.
         /// Please ensure at least two elements can be found when attempting to use this method.  <br />
+        /// Respects any timeout set for this ElementsHandler. <br />
         /// NOTE: By.Name locators have not yet been verified to work. Please file an issue if one is encountered: https://github.com/IntelliTect/TestTools.Selenate/issues
         /// </summary>
         /// <returns>The enumerable of ElementHandlers that exist at the time of invocation.</returns>

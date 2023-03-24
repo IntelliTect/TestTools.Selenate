@@ -68,7 +68,7 @@ public class GetElementHandlersTests
         const string cssIndex = ":nth-of-type";
         List<By> convertedBys = new();
 
-        for (int i = 1; i < 4; i++)
+        for (int i = 1; i < 3; i++)
         {
             convertedBys.Add(selectorType switch
             {
@@ -97,11 +97,7 @@ public class GetElementHandlersTests
 
         var mockElement2 = new Mock<IWebElement>();
         mockElement2.SetupGet(e2 => e2.Text).Returns("Testing2");
-        mockElement2.SetupGet(e2 => e2.Displayed).Returns(true);
-
-        var mockElement3 = new Mock<IWebElement>();
-        mockElement3.SetupGet(e2 => e2.Text).Returns("Testing3");
-        mockElement3.SetupGet(e2 => e2.Displayed).Returns(false);
+        mockElement2.SetupGet(e2 => e2.Displayed).Returns(false);
 
         var mockDriver = new Mock<IWebDriver>();
         mockDriver.Setup
@@ -112,14 +108,10 @@ public class GetElementHandlersTests
             (f => f.FindElement(convertedBys[1]))
             .Returns(mockElement2.Object);
 
-        mockDriver.Setup
-            (f => f.FindElement(convertedBys[2]))
-            .Returns(mockElement3.Object);
-
         ElementsHandler handler = new(mockDriver.Object, by);
         IEnumerable<ElementHandler> elementHandlers = handler.SetTimeout(TimeSpan.FromMilliseconds(20)).GetElementHandlers();
 
-        Assert.Equal(2, elementHandlers.Count());
+        Assert.Single(elementHandlers);
     }
 
     [Theory]
