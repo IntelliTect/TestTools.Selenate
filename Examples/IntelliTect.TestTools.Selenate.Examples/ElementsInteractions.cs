@@ -35,7 +35,8 @@ public class ElementsInteractions : TestBase
     public void GetAnEnumerableOfElementHandlers()
     {
         DriverHandler.NavigateToPage("https://the-internet.herokuapp.com/challenging_dom");
-        IEnumerable<ElementHandler> foundHandlers = _ChallengingDomPage.Headers.GetElementHandlers().ToList();
+        IEnumerable<ElementHandler> foundHandlers = _ChallengingDomPage.Headers.GetElementHandlers();
+
         foreach (ElementHandler handler in foundHandlers)
         {
             Assert.True(handler.WaitForDisplayed());

@@ -104,8 +104,9 @@ namespace IntelliTect.TestTools.Selenate
         }
 
         /// <summary>
-        /// Returns an IEnumerable of ElementHandlers for as long as a matching DOM item is found, based of XPath or CSS index.
-        /// Note that this does not guarantee long-term element existence.
+        /// Returns an ElementHandler as long as a matching DOM item is found, based on XPath or CSS index.
+        /// Please ensure at least two elements can be found when attempting to use this method.  <br />
+        /// NOTE: By.Name locators have not yet been verified to work. Please file an issue if one is encountered: https://github.com/IntelliTect/TestTools.Selenate/issues
         /// </summary>
         /// <returns>The enumerable of ElementHandlers that exist at the time of invocation.</returns>
         public IEnumerable<ElementHandler> GetElementHandlers()
@@ -118,7 +119,7 @@ namespace IntelliTect.TestTools.Selenate
                 By by;
                 if (Locator.Mechanism is "css selector")
                 {
-                    by = By.CssSelector($"{Locator.Criteria.Replace("\\", "")}:nth-of-type({iteration})");
+                    by = By.CssSelector($"{Locator.Criteria}:nth-of-type({iteration})");
                 }
                 else if (Locator.Mechanism is "xpath")
                 {
@@ -163,7 +164,8 @@ namespace IntelliTect.TestTools.Selenate
         }
 
         /// <summary>
-        /// Gets all elements found by <see cref="Locator"/>, matching a given predicate.
+        /// Gets all elements found by <see cref="Locator"/>, matching a given predicate. <br />
+        /// Prefer to use <see cref="GetElementHandlers"/> if you need automatic retries on subsequent actions and know there will be more than one result.
         /// </summary>
         /// <param name="predicate">The function used to filter to one or more IWebElements</param>
         /// <returns>A list of found IWebElements</returns>
