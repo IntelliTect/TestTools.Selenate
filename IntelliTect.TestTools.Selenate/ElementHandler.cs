@@ -72,6 +72,11 @@ namespace IntelliTect.TestTools.Selenate
             return SetPollingInterval<ElementHandler>(TimeSpan.FromMilliseconds(pollIntervalInMilliseconds));
         }
 
+        /// <summary>
+        /// Overrides the default search context (IWebDriver) with a different SearchContext, E.G. if you need to search a Shadow DOM
+        /// </summary>
+        /// <param name="searchContext">The SearchContext to use for all Find calls.</param>
+        /// <returns>this</returns>
         public ElementHandler SetSearchContext(ISearchContext searchContext)
         {
             SearchContext = searchContext;
@@ -88,8 +93,17 @@ namespace IntelliTect.TestTools.Selenate
             return this;
         }
 
+        /// <summary>
+        /// Finds a new element as a child of this element. Returns an ElementHandler for further interactions
+        /// </summary>
+        /// <param name="by">The locator to use when finding an element</param>
+        /// <returns>this</returns>
         public ElementHandler FindElement(By by)
         {
+            // NOTE: It may not be worth doing the find here.
+            // All subsequent actions in this Handler will do this anyway.
+            // This may just be adding unnecessary time to this call.
+            // Need to assess.
             IWait<IWebDriver> wait = ElementWait();
             wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
             IWebElement foundElem = wait.Until(_ => {
@@ -102,8 +116,17 @@ namespace IntelliTect.TestTools.Selenate
             return newHandler;
         }
 
+        /// <summary>
+        /// Finds a list of elements as a child of this element. Returns an ElementsHandler for further interactions
+        /// </summary>
+        /// <param name="by">The locator to use when finding elements</param>
+        /// <returns>this</returns>
         public ElementsHandler FindElements(By by)
         {
+            // NOTE: It may not be worth doing the find here.
+            // All subsequent actions in this Handler will do this anyway.
+            // This may just be adding unnecessary time to this call.
+            // Need to assess.
             IWait<IWebDriver> wait = ElementWait();
             wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
             IWebElement foundElem = wait.Until(_ => {
