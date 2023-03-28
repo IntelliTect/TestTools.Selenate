@@ -5,7 +5,7 @@ Provides wrapper functions to leverage commonly used WebDriverWaits. Note that t
 Simple Usage
 -----
 To instantiate a class that manages simple WebDriver interactions:
-```
+```C#
 // WebDriverFactory is not required. You can pass in your own IWebDriver to DriverHandler instead.
 IWebDriver driver = new WebDriverFactory(BrowserType.Chrome).GetDriver();
 DriverHandler handler = new(driver);
@@ -13,7 +13,7 @@ handler.NavigateToPage("http://www.some-page.com/");
 ```
 
 To instantiate a class that manages simple interactions with a single IWebElement (note: this uses a Page Object Model approach):
-```
+```C#
 public class SomePageUnderTest
 {
     public SomePageUnderTest(IWebDriver driver)
@@ -63,7 +63,7 @@ Complex Use Cases
 -----
 Using the same structure as above, we can create complex use cases
 
-```
+```C#
 public void SomeTest
 {
     // Same setup as above.
