@@ -9,7 +9,7 @@ defaults:
     shell: pwsh
 
 env:
-  baseVersion: 1.0.0
+  baseVersion: 3.0.0
 
 jobs:
   build-and-test:
