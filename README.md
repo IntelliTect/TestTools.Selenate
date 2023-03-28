@@ -43,7 +43,6 @@ public class SomeTest
     public void Testing()
     {
         // Arrange
-        handler.NavigateToPage("http://www.intellitect.com/");
         SomePageUnderTest put = new(_Handler.WrappedDriver);
         _Handler.NavigateToPage("http://www.some-page.com/");
 
@@ -64,6 +63,7 @@ Complex Use Cases
 -----
 Using the same structure as above, we can create complex use cases
 
+```
 public void SomeTest
 {
     // Same setup as above.
@@ -75,7 +75,6 @@ public void SomeTest
         // Arrange
         // Note: to reduce code duplication, this can be abstracted out into the Page Object for small projects,
         // Or into an explicit class of grouped actions for large projects.
-        handler.NavigateToPage("http://www.intellitect.com/");
         SomePageUnderTest put = new(_Handler.WrappedDriver);
         _Handler.NavigateToPage("http://www.some-page.com/");
 
@@ -104,3 +103,4 @@ public void SomeTest
         })
     }
 }
+```
