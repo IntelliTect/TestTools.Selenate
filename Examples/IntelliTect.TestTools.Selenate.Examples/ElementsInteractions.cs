@@ -30,4 +30,22 @@ public class ElementsInteractions : TestBase
             7,
             foundCount);
     }
+
+    [Fact]
+    public void GetAnEnumerableOfElementHandlers()
+    {
+        DriverHandler.NavigateToPage("https://the-internet.herokuapp.com/challenging_dom");
+        // We expect exactly 7 headers here.
+        // However, depending on specific scenarios, E.G. dynamic content,
+        //   may make sense to use a not do a ToList() and Assert.Count and instead
+        //   use a lower .Take() and go straight to iterating
+        IList<ElementHandler> foundHandlers = _ChallengingDomPage.Headers.GetElementHandlers().Take(7).ToList();
+
+        Assert.True(foundHandlers.Count is 7);
+
+        foreach (ElementHandler handler in foundHandlers)
+        {
+            Assert.True(handler.WaitForDisplayed());
+        }
+    }
 }
