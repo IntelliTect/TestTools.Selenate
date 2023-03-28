@@ -35,13 +35,13 @@ public class ElementsInteractions : TestBase
     public void GetAnEnumerableOfElementHandlers()
     {
         DriverHandler.NavigateToPage("https://the-internet.herokuapp.com/challenging_dom");
-        // Take only 4 as we know there are at least 4 on this page.
-        // Note: There are other ways of handling this,
-        //  but because this method does not know in advance how many elements will be found,
-        //  some form of limiting or iterating then breaking 
-        IEnumerable<ElementHandler> foundHandlers = _ChallengingDomPage.Headers.GetElementHandlers();
+        // We expect exactly 7 headers here.
+        // However, depending on specific scenarios, E.G. dynamic content,
+        //   may make sense to use a not do a ToList() and Assert.Count and instead
+        //   use a lower .Take() and go straight to iterating
+        IList<ElementHandler> foundHandlers = _ChallengingDomPage.Headers.GetElementHandlers().Take(7).ToList();
 
-        Assert.True(foundHandlers.Any());
+        Assert.True(foundHandlers.Count is 7);
 
         foreach (ElementHandler handler in foundHandlers)
         {
