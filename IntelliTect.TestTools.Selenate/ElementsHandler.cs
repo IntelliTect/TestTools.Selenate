@@ -81,7 +81,7 @@ namespace IntelliTect.TestTools.Selenate
         }
 
         /// <summary>
-        /// Checks if any element found by <see cref="Locator"/> contains the matching text.
+        /// Checks if any element found by <see cref="ElementBase.Locator"/> contains the matching text.
         /// </summary>
         /// <param name="text">The text to search for.</param>
         /// <returns>True if the text is found; false if it is not.</returns>
@@ -148,7 +148,7 @@ namespace IntelliTect.TestTools.Selenate
         }
 
         /// <summary>
-        /// Checks if any element found by <see cref="Locator"/> matches a predicate.
+        /// Checks if any element found by <see cref="ElementBase.Locator"/> matches a predicate.
         /// </summary>
         /// <param name="predicate">The criteria to attempt to match on.</param>
         /// <returns></returns>
@@ -165,7 +165,7 @@ namespace IntelliTect.TestTools.Selenate
         }
 
         /// <summary>
-        /// Gets all elements found by <see cref="Locator"/>, matching a given predicate. <br />
+        /// Gets all elements found by <see cref="ElementBase.Locator"/>, matching a given predicate. <br />
         /// Prefer to use <see cref="GetElementHandlers"/> if you need automatic retries on subsequent actions and know there will be more than one result.
         /// </summary>
         /// <param name="predicate">The function used to filter to one or more IWebElements</param>

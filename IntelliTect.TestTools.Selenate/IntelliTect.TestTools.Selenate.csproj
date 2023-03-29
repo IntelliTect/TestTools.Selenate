@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
 	<OutputType>Library</OutputType>
-    <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Company>IntelliTect-Nuget</Company>
     <Description>A testing library for selenate to help with test automation.</Description>
