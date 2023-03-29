@@ -63,7 +63,7 @@ Complex Use Cases
 -----
 Using the same structure as above, we can create complex use cases
 
-```
+```C#
 public void SomeTest
 {
     // Same setup as above.
