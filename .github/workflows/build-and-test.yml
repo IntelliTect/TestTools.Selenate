@@ -29,14 +29,9 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build -p:ContinuousIntegrationBuild=True --no-restore --configuration Release
-    - uses: browser-actions/setup-chrome@v1
-      with:
-        chrome-version: latest
-      id: setup-chrome
-    - run: |
-        echo Installed chromium version: ${{ steps.setup-chrome.outputs.chrome-version }}
+    - uses: nanasess/setup-chromedriver@v2
     - name: Test
-      run: dotnet test --filter FullyQualifiedName!~Selenate.Examples --no-build --configuration Release --verbosity normal
+      run: dotnet test --no-build --configuration Release --verbosity normal
 
   automerge:
     needs: [build-and-test]
