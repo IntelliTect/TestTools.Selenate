@@ -29,10 +29,6 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build -p:ContinuousIntegrationBuild=True --no-restore --configuration Release
-    - uses: browser-actions/setup-chrome@v1
-      with:
-        chrome-version: latest
-      id: setup-chrome
     - uses: nanasess/setup-chromedriver@v2
     - run: |
         echo Installed chromium version: ${{ steps.setup-chrome.outputs.chrome-version }}
