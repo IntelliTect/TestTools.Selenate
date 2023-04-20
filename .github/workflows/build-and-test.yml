@@ -33,10 +33,11 @@ jobs:
       with:
         chrome-version: latest
       id: setup-chrome
+    - uses: nanasess/setup-chromedriver@v2
     - run: |
         echo Installed chromium version: ${{ steps.setup-chrome.outputs.chrome-version }}
     - name: Test
-      run: dotnet test --filter FullyQualifiedName!~Selenate.Examples --no-build --configuration Release --verbosity normal
+      run: dotnet test --no-build --configuration Release --verbosity normal
 
   automerge:
     needs: [build-and-test]
