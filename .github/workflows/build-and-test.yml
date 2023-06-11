@@ -44,13 +44,13 @@ jobs:
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
         sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
         sudo apt-get update
-        sudo apt-get install google-chrome-
+        sudo apt-get install google-chrome-stable
     - name: Install latest Chrome (macOS)
       if: ${{ runner.os == 'macOS' }}
       run: |
         wget -q https://dl.google.com/chrome/mac/universal/stable/GGRO/googlechrome.dmg
         hdiutil attach -quiet -noautofsck -noautoopen googlechrome.dmg
-        sudo cp -r /Volumes/Google\ Chrome/Google\ Chrome.app /
+        sudo cp -r /Volumes/Google\ Chrome/Google\ Chrome.app /Applications/
 
     - name: Test
       run: dotnet test --no-build --configuration Release --verbosity normal
