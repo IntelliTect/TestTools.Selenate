@@ -194,13 +194,10 @@ namespace IntelliTect.TestTools.Selenate
         /// </summary>
         public void TakeScreenshot()
         {
-            if(ScreenshotLocation is null)
-            {
-                ScreenshotLocation = new FileInfo(
+            ScreenshotLocation ??= new FileInfo(
                     Path.Combine(Path.GetTempPath(),
                     "screenshots",
                     $"{((RemoteWebDriver)WrappedDriver).Capabilities.GetCapability("browserName")}_{DateTime.Now:yyyy.MM.dd_hh.mm.ss}.png"));
-            }
 
             Directory.CreateDirectory(ScreenshotLocation.DirectoryName);
 
@@ -210,7 +207,7 @@ namespace IntelliTect.TestTools.Selenate
             {
                 Screenshot screenshot = takeScreenshot.GetScreenshot();
                 Debug.WriteLine($"Saving screenshot to location: {ScreenshotLocation.FullName}");
-                screenshot?.SaveAsFile(ScreenshotLocation.FullName, ScreenshotImageFormat.Png);
+                screenshot?.SaveAsFile(ScreenshotLocation.FullName);
             }
         }
 
@@ -221,13 +218,10 @@ namespace IntelliTect.TestTools.Selenate
         /// <param name="y">The window width desired for the screenshot.</param>
         public void TakeScreenshot(int x, int y)
         {
-            if (ScreenshotLocation is null)
-            {
-                ScreenshotLocation = new FileInfo(
+            ScreenshotLocation ??= new FileInfo(
                     Path.Combine(Path.GetTempPath(),
                     "screenshots",
                     $"{((RemoteWebDriver)WrappedDriver).Capabilities.GetCapability("browserName")}_{DateTime.Now:yyyy.MM.dd_hh.mm.ss}.png"));
-            }
 
             Directory.CreateDirectory(ScreenshotLocation.DirectoryName);
 
@@ -238,7 +232,7 @@ namespace IntelliTect.TestTools.Selenate
                 WrappedDriver.Manage().Window.Size = new System.Drawing.Size(x, y);
                 Screenshot screenshot = takeScreenshot.GetScreenshot();
                 Debug.WriteLine($"Saving screenshot to location: {ScreenshotLocation.FullName}");
-                screenshot?.SaveAsFile(ScreenshotLocation.FullName, ScreenshotImageFormat.Png);
+                screenshot?.SaveAsFile(ScreenshotLocation.FullName);
             }
         }
     }
