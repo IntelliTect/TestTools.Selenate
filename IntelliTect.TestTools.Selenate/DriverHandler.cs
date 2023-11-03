@@ -189,7 +189,7 @@ namespace IntelliTect.TestTools.Selenate
         }
 
         /// <summary>
-        /// Take a screenshot of the browser and save it to the passed in fully qualified path.
+        /// Take a screenshot of the browser and save it either to a location specified in <see cref="SetScreenshotLocation(FileInfo)"/> or to the temporary path for your environment.
         /// Will not throw if the path does not exist.
         /// </summary>
         public void TakeScreenshot()
@@ -208,6 +208,34 @@ namespace IntelliTect.TestTools.Selenate
 
             if (WrappedDriver is ITakesScreenshot takeScreenshot)
             {
+                Screenshot screenshot = takeScreenshot.GetScreenshot();
+                Debug.WriteLine($"Saving screenshot to location: {ScreenshotLocation.FullName}");
+                screenshot?.SaveAsFile(ScreenshotLocation.FullName, ScreenshotImageFormat.Png);
+            }
+        }
+
+        /// <summary>
+        /// Take a screenshot of the browser and save it either to a location specified in <see cref="SetScreenshotLocation(FileInfo)"/> or to the temporary path for your environment.
+        /// </summary>
+        /// <param name="x">The window height desired for the screenshot. (The </param>
+        /// <param name="y">The window width desired for the screenshot.</param>
+        public void TakeScreenshot(int x, int y)
+        {
+            if (ScreenshotLocation is null)
+            {
+                ScreenshotLocation = new FileInfo(
+                    Path.Combine(Path.GetTempPath(),
+                    "screenshots",
+                    $"{((RemoteWebDriver)WrappedDriver).Capabilities.GetCapability("browserName")}_{DateTime.Now:yyyy.MM.dd_hh.mm.ss}.png"));
+            }
+
+            Directory.CreateDirectory(ScreenshotLocation.DirectoryName);
+
+            ScreenshotLocation.Delete();
+
+            if (WrappedDriver is ITakesScreenshot takeScreenshot)
+            {
+                WrappedDriver.Manage().Window.Size = new System.Drawing.Size(x, y);
                 Screenshot screenshot = takeScreenshot.GetScreenshot();
                 Debug.WriteLine($"Saving screenshot to location: {ScreenshotLocation.FullName}");
                 screenshot?.SaveAsFile(ScreenshotLocation.FullName, ScreenshotImageFormat.Png);
