@@ -58,7 +58,7 @@ jobs:
       url: 'https://www.nuget.org/packages/IntelliTect.TestTools.Selenate'
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: NuGet
       - name: Push NuGet
