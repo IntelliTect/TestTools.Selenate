@@ -17,7 +17,7 @@ namespace IntelliTect.TestTools.Selenate
         /// Constructor to wrap a specific instace of a WebDriver
         /// </summary>
         /// <param name="driver">The WebDriver to wrap</param>
-        public DriverHandler(IWebDriver driver) : base(driver) {  }
+        public DriverHandler(IWebDriver driver) : base(driver) { }
 
         private FileInfo? ScreenshotLocation { get; set; }
 
@@ -137,9 +137,10 @@ namespace IntelliTect.TestTools.Selenate
         {
             IWait<IWebDriver> wait = Wait;
             wait.IgnoreExceptionTypes(typeof(NoSuchWindowException));
-            wait.Until(w => {
+            wait.Until(w =>
+            {
                 IReadOnlyCollection<string> handles = w.WindowHandles;
-                foreach(var h in handles)
+                foreach (var h in handles)
                 {
                     w.SwitchTo().Window(h);
                     if (w.Title == title) return true;
@@ -182,8 +183,21 @@ namespace IntelliTect.TestTools.Selenate
             // See if restarting the whole search like we currently do on PTT is necessary, or if we can just wait for something to finish loading
             foreach (By by in bys)
             {
-                wait.Until(f => f.SwitchTo().Frame(f.FindElement(by)));
+                wait.Until(f =>
+                {
+                    IWebElement elem = f.FindElement(by);
+                    return f.SwitchTo().Frame(elem);
+                });
             }
+
+            /*wait.Until(f =>
+            {
+                foreach (By by in bys)
+                {
+                    f.SwitchTo().Frame(f.FindElement(by));
+                }
+                return true;
+            });*/
 
             return this;
         }
@@ -194,7 +208,7 @@ namespace IntelliTect.TestTools.Selenate
         /// </summary>
         public void TakeScreenshot()
         {
-            if(ScreenshotLocation is null)
+            if (ScreenshotLocation is null)
             {
                 ScreenshotLocation = new FileInfo(
                     Path.Combine(Path.GetTempPath(),
