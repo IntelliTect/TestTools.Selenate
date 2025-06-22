@@ -15,7 +15,7 @@ public class ComplexScenarios : TestBase
     private readonly EditorPage _Editor;
     private readonly SliderPage _Slider;
 
-    [Fact]
+    [Fact(Skip="This test relies on a page that appears to requires a license now.")]
     public void ComplexWait()
     {
         DriverHandler.NavigateToPage("https://the-internet.herokuapp.com/tinymce");
