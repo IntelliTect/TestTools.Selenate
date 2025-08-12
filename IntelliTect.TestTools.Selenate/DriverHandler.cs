@@ -210,7 +210,7 @@ namespace IntelliTect.TestTools.Selenate
             {
                 Screenshot screenshot = takeScreenshot.GetScreenshot();
                 Debug.WriteLine($"Saving screenshot to location: {ScreenshotLocation.FullName}");
-                screenshot?.SaveAsFile(ScreenshotLocation.FullName, ScreenshotImageFormat.Png);
+                screenshot?.SaveAsFile(ScreenshotLocation.FullName);
             }
         }
     }

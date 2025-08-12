@@ -148,7 +148,7 @@ namespace IntelliTect.TestTools.Selenate
             wait.IgnoreExceptionTypes(
                 typeof(NoSuchElementException),
                 typeof(InvalidElementStateException),
-                typeof(ElementNotVisibleException),
+                typeof(ElementNotInteractableException),
                 typeof(StaleElementReferenceException),
                 typeof(ElementClickInterceptedException)
                 );
@@ -170,7 +170,6 @@ namespace IntelliTect.TestTools.Selenate
             wait.IgnoreExceptionTypes(
                 typeof(NoSuchElementException),
                 typeof(InvalidElementStateException),
-                typeof(ElementNotVisibleException),
                 typeof(StaleElementReferenceException),
                 typeof(ElementNotInteractableException)
                 );
@@ -234,7 +233,7 @@ namespace IntelliTect.TestTools.Selenate
             wait.IgnoreExceptionTypes(
                 typeof(NoSuchElementException),
                 typeof(InvalidElementStateException),
-                typeof(ElementNotVisibleException),
+                typeof(ElementNotInteractableException),
                 typeof(StaleElementReferenceException)
                 );
 
