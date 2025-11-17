@@ -121,7 +121,7 @@ namespace IntelliTect.TestTools.Selenate
             string locatorCriteria = locator.Criteria;
             if (!locatorCriteria.Contains("{index}"))
             {
-                locatorCriteria = $"{locator}{{index}}";
+                locatorCriteria = $"{locatorCriteria}{{index}}";
             }
 
             do

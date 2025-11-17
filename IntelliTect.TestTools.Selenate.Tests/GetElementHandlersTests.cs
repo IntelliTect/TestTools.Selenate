@@ -1,4 +1,6 @@
-﻿namespace IntelliTect.TestTools.Selenate.Tests;
+﻿using OpenQA.Selenium.DevTools.V115.FedCm;
+
+namespace IntelliTect.TestTools.Selenate.Tests;
 
 public class GetElementHandlersTests
 {
@@ -114,34 +116,32 @@ public class GetElementHandlersTests
         Assert.Single(elementHandlers);
     }
 
-    [Fact]
-    public void GetElementHandlersWorksWithAllSelectorTypesTest()
+    [Theory]
+    [InlineData("css", "div[id='test']>div", "div[id='test']>div:nth-of-type({index})")]
+    [InlineData("css", "div[id='test']{index}>div", "div[id='test']:nth-of-type({index})>div")]
+    [InlineData("xpath", "//div[@id='test']/div", "//div[@id='test']/div[{index}]")]
+    [InlineData("xpath", "//div[@id='test']{index}/div", "//div[@id='test'][{index}]/div")]
+    public void GetElementHandlersWorksWithAllSelectorTypesTest(string selectorType, string selectorCriteria, string expectedResult)
     {
         //const string cssIndex = ":nth-of-type";
-        //List<By> convertedBys = new();
+        List<By> convertedBys = new();
 
-        //for (int i = 1; i < 3; i++)
-        //{
-        //    convertedBys.Add(selectorType switch
-        //    {
-        //        "id" => By.CssSelector($"{ByIdCriteria}{cssIndex}({i})"),
-        //        "class" => By.CssSelector($"{ByClassNameCriteria}{cssIndex}({i})"),
-        //        "name" => By.CssSelector($"{ByNameCriteria}{cssIndex}({i})"),
-        //        "css" => By.CssSelector($"{ByCssCriteria}{cssIndex}({i})"),
-        //        "xpath" => By.XPath($"{ByXPathCriteria}[{i}]"),
-        //        _ => throw new ArgumentException($"Please add support for this selector type: {selectorType}")
-        //    });
-        //}
+        for (int i = 1; i < 3; i++)
+        {
+            convertedBys.Add(selectorType switch
+            {
+                "css" => By.CssSelector(expectedResult.Replace("{index}", i.ToString())),
+                "xpath" => By.XPath(expectedResult.Replace("{index}", i.ToString())),
+                _ => throw new ArgumentException($"Please add support for this selector type: {selectorType}")
+            });
+        }
 
-        //By by = selectorType switch
-        //{
-        //    "id" => By.Id("test"),
-        //    "class" => By.ClassName("test"),
-        //    "name" => By.Name("test"),
-        //    "css" => By.CssSelector("div[id='test']"),
-        //    "xpath" => By.XPath("//div[@id='test']"),
-        //    _ => throw new ArgumentException($"Please add support for this selector type: {selectorType}")
-        //};
+        By by = selectorType switch
+        {
+            "css" => By.CssSelector(selectorCriteria),
+            "xpath" => By.XPath(selectorCriteria),
+            _ => throw new ArgumentException($"Please add support for this selector type: {selectorType}")
+        };
 
         var mockElement1 = new Mock<IWebElement>();
         mockElement1.SetupGet(e1 => e1.Text).Returns("Testing1");
@@ -153,18 +153,20 @@ public class GetElementHandlersTests
 
         var mockDriver = new Mock<IWebDriver>();
         mockDriver.Setup
-            (f => f.FindElement(By.CssSelector($"{ByCssCriteria}:nth-of-type(1)")))
+            (f => f.FindElement(convertedBys[0]))
             .Returns(mockElement1.Object);
 
         mockDriver.Setup
-            (f => f.FindElement(By.XPath($"{ByXPathCriteria}[2]")))
+            (f => f.FindElement(convertedBys[1]))
             .Returns(mockElement2.Object);
 
         ElementsHandler handler = new(mockDriver.Object, By.CssSelector("div#test"));
-        IEnumerable<ElementHandler> elementHandlers = handler.SetTimeout(TimeSpan.FromMilliseconds(20)).GetElementHandlers(By.CssSelector(ByCssCriteria));
+        IEnumerable<ElementHandler> elementHandlers = handler
+            .SetTimeout(TimeSpan.FromMilliseconds(20))
+            .GetElementHandlers(by);
 
         Assert.Single(elementHandlers);
-        Assert.Equal("", elementHandlers.First().Locator.Criteria);
+        Assert.Equal(convertedBys[0].Criteria, elementHandlers.First().Locator.Criteria);
     }
 
     [Theory]
