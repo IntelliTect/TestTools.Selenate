@@ -1,6 +1,4 @@
-﻿using OpenQA.Selenium.DevTools.V115.FedCm;
-
-namespace IntelliTect.TestTools.Selenate.Tests;
+﻿namespace IntelliTect.TestTools.Selenate.Tests;
 
 public class GetElementHandlersTests
 {
