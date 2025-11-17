@@ -113,31 +113,32 @@ namespace IntelliTect.TestTools.Selenate
         /// NOTE: By.Name locators have not yet been verified to work. Please file an issue if one is encountered: https://github.com/IntelliTect/TestTools.Selenate/issues
         /// </summary>
         /// <returns>The enumerable of ElementHandlers that exist at the time of invocation.</returns>
-        public IEnumerable<ElementHandler> GetElementHandlers()
+        public IEnumerable<ElementHandler> GetElementHandlers(By? byOverride = null)
         {
             // DOM elements are 1-based indexes
             int iteration = 1;
-            string locator = Locator.Criteria;
-            if (!locator.Contains("{index}"))
+            By locator = byOverride ?? Locator;
+            string locatorCriteria = locator.Criteria;
+            if (!locatorCriteria.Contains("{index}"))
             {
-                locator = $"{locator}{{index}}";
+                locatorCriteria = $"{locator}{{index}}";
             }
 
             do
             {
                 By by;
-                if (Locator.Mechanism is "css selector")
+                if (locator.Mechanism is "css selector")
                 {
-                    by = By.CssSelector(locator.Replace("{index}", $":nth-of-type({iteration})"));
+                    by = By.CssSelector(locatorCriteria.Replace("{index}", $":nth-of-type({iteration})"));
                 }
-                else if (Locator.Mechanism is "xpath")
+                else if (locator.Mechanism is "xpath")
                 {
-                    by = By.XPath(locator.Replace("{index}", $"[{iteration}]"));
+                    by = By.XPath(locatorCriteria.Replace("{index}", $"[{iteration}]"));
                 }
                 else
                 {
                     throw new ArgumentException(
-                        $"Invalid selector type, {Locator.Mechanism} for method {nameof(GetElementHandlers)}. Please convert to any selector type other than Partial Link Text, Link Text, or Tag Name.");
+                        $"Invalid selector type, {locator.Mechanism} for method {nameof(GetElementHandlers)}. Please convert to any selector type other than Partial Link Text, Link Text, or Tag Name.");
                 }
 
                 ElementHandler foundHandler = new(WrappedDriver, by);

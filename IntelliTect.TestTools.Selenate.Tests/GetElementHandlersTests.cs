@@ -114,6 +114,59 @@ public class GetElementHandlersTests
         Assert.Single(elementHandlers);
     }
 
+    [Fact]
+    public void GetElementHandlersWorksWithAllSelectorTypesTest()
+    {
+        //const string cssIndex = ":nth-of-type";
+        //List<By> convertedBys = new();
+
+        //for (int i = 1; i < 3; i++)
+        //{
+        //    convertedBys.Add(selectorType switch
+        //    {
+        //        "id" => By.CssSelector($"{ByIdCriteria}{cssIndex}({i})"),
+        //        "class" => By.CssSelector($"{ByClassNameCriteria}{cssIndex}({i})"),
+        //        "name" => By.CssSelector($"{ByNameCriteria}{cssIndex}({i})"),
+        //        "css" => By.CssSelector($"{ByCssCriteria}{cssIndex}({i})"),
+        //        "xpath" => By.XPath($"{ByXPathCriteria}[{i}]"),
+        //        _ => throw new ArgumentException($"Please add support for this selector type: {selectorType}")
+        //    });
+        //}
+
+        //By by = selectorType switch
+        //{
+        //    "id" => By.Id("test"),
+        //    "class" => By.ClassName("test"),
+        //    "name" => By.Name("test"),
+        //    "css" => By.CssSelector("div[id='test']"),
+        //    "xpath" => By.XPath("//div[@id='test']"),
+        //    _ => throw new ArgumentException($"Please add support for this selector type: {selectorType}")
+        //};
+
+        var mockElement1 = new Mock<IWebElement>();
+        mockElement1.SetupGet(e1 => e1.Text).Returns("Testing1");
+        mockElement1.SetupGet(e1 => e1.Displayed).Returns(true);
+
+        var mockElement2 = new Mock<IWebElement>();
+        mockElement2.SetupGet(e2 => e2.Text).Returns("Testing2");
+        mockElement2.SetupGet(e2 => e2.Displayed).Returns(false);
+
+        var mockDriver = new Mock<IWebDriver>();
+        mockDriver.Setup
+            (f => f.FindElement(By.CssSelector($"{ByCssCriteria}:nth-of-type(1)")))
+            .Returns(mockElement1.Object);
+
+        mockDriver.Setup
+            (f => f.FindElement(By.XPath($"{ByXPathCriteria}[2]")))
+            .Returns(mockElement2.Object);
+
+        ElementsHandler handler = new(mockDriver.Object, By.CssSelector("div#test"));
+        IEnumerable<ElementHandler> elementHandlers = handler.SetTimeout(TimeSpan.FromMilliseconds(20)).GetElementHandlers(By.CssSelector(ByCssCriteria));
+
+        Assert.Single(elementHandlers);
+        Assert.Equal("", elementHandlers.First().Locator.Criteria);
+    }
+
     [Theory]
     [InlineData("tagname")]
     [InlineData("link")]
