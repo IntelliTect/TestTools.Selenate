@@ -19,9 +19,9 @@ jobs:
       matrix:
         os: [windows-latest, macos-latest]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: | 
             7.x
@@ -42,4 +42,4 @@ jobs:
       contents: write
 
     steps:
-      - uses: fastify/github-action-merge-dependabot@v3.11.1
+      - uses: fastify/github-action-merge-dependabot@v3.11.2
