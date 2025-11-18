@@ -163,8 +163,8 @@ public class GetElementHandlersTests
             .SetTimeout(TimeSpan.FromMilliseconds(20))
             .GetElementHandlers(by);
 
-        Assert.Single(elementHandlers);
-        Assert.Equal(convertedBys[0].Criteria, elementHandlers.First().Locator.Criteria);
+        var elementHandler = Assert.Single(elementHandlers);
+        Assert.Equal(convertedBys[0].Criteria, elementHandler.Locator.Criteria);
     }
 
     [Theory]
