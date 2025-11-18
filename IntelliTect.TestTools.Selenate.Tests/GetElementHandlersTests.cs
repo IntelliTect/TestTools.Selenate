@@ -122,7 +122,7 @@ public class GetElementHandlersTests
     public void GetElementHandlersWorksWithAllSelectorTypesTest(string selectorType, string selectorCriteria, string expectedResult)
     {
         //const string cssIndex = ":nth-of-type";
-        List<By> convertedBys = new();
+        List<By> convertedBys = new(2);
 
         for (int i = 1; i < 3; i++)
         {
