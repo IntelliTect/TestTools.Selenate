@@ -104,32 +104,43 @@ namespace IntelliTect.TestTools.Selenate
         }
 
         /// <summary>
-        /// Returns an ElementHandler as long as a matching DOM item is found, based on XPath or CSS index.
+        /// Returns an ElementHandler as long as a matching DOM item is found, based on XPath or CSS index. <br />
+        /// Note that if your locator does not have '{index}' in it, one will be appended to the end. <br />
+        /// E.G. The locator By.CssSelector("div>div") will become By.CssSelector("div>div:nth-of-type(1)") <br />
+        /// and By.CssSelector("div{index}>div") will become By.CssSelector("div:nth-of-type(1)>div") <br /> <br />
         /// Please ensure at least two elements can be found when attempting to use this method.  <br />
-        /// Respects any timeout set for this ElementsHandler. <br />
+        /// Respects any timeout set for this ElementsHandler. <br /> <br />
         /// NOTE: By.Name locators have not yet been verified to work. Please file an issue if one is encountered: https://github.com/IntelliTect/TestTools.Selenate/issues
         /// </summary>
+        /// <param name="byOverride">Used to override the locator only for this operation. This is primarily used when your regular locator <br />
+        /// is needed for other operations, but you must specify where the indexing call needs to go for this specific operation.</param>
         /// <returns>The enumerable of ElementHandlers that exist at the time of invocation.</returns>
-        public IEnumerable<ElementHandler> GetElementHandlers()
+        public IEnumerable<ElementHandler> GetElementHandlers(By? byOverride = null)
         {
             // DOM elements are 1-based indexes
             int iteration = 1;
-            
+            By locator = byOverride ?? Locator;
+            string locatorCriteria = locator.Criteria;
+            if (!locatorCriteria.Contains("{index}"))
+            {
+                locatorCriteria = $"{locatorCriteria}{{index}}";
+            }
+
             do
             {
                 By by;
-                if (Locator.Mechanism is "css selector")
+                if (locator.Mechanism is "css selector")
                 {
-                    by = By.CssSelector($"{Locator.Criteria}:nth-of-type({iteration})");
+                    by = By.CssSelector(locatorCriteria.Replace("{index}", $":nth-of-type({iteration})"));
                 }
-                else if (Locator.Mechanism is "xpath")
+                else if (locator.Mechanism is "xpath")
                 {
-                    by = By.XPath($"{Locator.Criteria}[{iteration}]");
+                    by = By.XPath(locatorCriteria.Replace("{index}", $"[{iteration}]"));
                 }
                 else
                 {
                     throw new ArgumentException(
-                        $"Invalid selector type, {Locator.Mechanism} for method {nameof(GetElementHandlers)}. Please convert to any selector type other than Partial Link Text, Link Text, or Tag Name.");
+                        $"Invalid selector type, {locator.Mechanism} for method {nameof(GetElementHandlers)}. Please convert to any selector type other than Partial Link Text, Link Text, or Tag Name.");
                 }
 
                 ElementHandler foundHandler = new(WrappedDriver, by);
