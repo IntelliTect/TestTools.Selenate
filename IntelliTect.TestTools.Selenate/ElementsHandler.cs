@@ -112,6 +112,8 @@ namespace IntelliTect.TestTools.Selenate
         /// Respects any timeout set for this ElementsHandler. <br /> <br />
         /// NOTE: By.Name locators have not yet been verified to work. Please file an issue if one is encountered: https://github.com/IntelliTect/TestTools.Selenate/issues
         /// </summary>
+        /// <param name="byOverride">Used to override the locator only for this operation. This is primarily used when your regular locator <br />
+        /// is needed for other operations, but you must specify where the indexing call needs to go for this specific operation.</param>
         /// <returns>The enumerable of ElementHandlers that exist at the time of invocation.</returns>
         public IEnumerable<ElementHandler> GetElementHandlers(By? byOverride = null)
         {
