@@ -192,7 +192,9 @@ namespace IntelliTect.TestTools.Selenate
         private IList<IWebElement> GetElements(Func<IWebElement, bool> predicate)
         {
             IWait<IWebDriver> wait = Wait;
-            wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+            wait.IgnoreExceptionTypes(
+                typeof(NoSuchElementException),
+                typeof(StaleElementReferenceException));
 
             return wait.Until(_ =>
             {
