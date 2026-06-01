@@ -29,7 +29,7 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build -p:ContinuousIntegrationBuild=True --no-restore --configuration Release
-    - uses: nanasess/setup-chromedriver@v2
+    - uses: nanasess/setup-chromedriver@v3
     - name: Test
       run: dotnet test --filter FullyQualifiedName!~Selenate.Examples --no-build --configuration Release --verbosity normal
 
